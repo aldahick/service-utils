@@ -2,10 +2,15 @@
   "name": "@aldahick/service-utils",
   "version": "0.1.0",
   "description": "",
+  "license": "MIT",
   "author": "Alex Hicks <alex@alexhicks.net> (https://alexhicks.net)",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "scripts": {},
+  "scripts": {
+    "prepublishOnly": "npm run build",
+    "build": "tsc -p .",
+    "lint": "eslint . --ext .ts"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aldahick/service-utils"
