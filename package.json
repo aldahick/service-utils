@@ -15,6 +15,11 @@
     "type": "git",
     "url": "git+https://github.com/aldahick/service-utils"
   },
+  "files": [
+    "dist",
+    "src",
+    "*.*"
+  ],
   "dependencies": {},
   "devDependencies": {
     "@aldahick/eslint-rules": "0.1.0",
