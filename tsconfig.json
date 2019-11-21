@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "commonjs",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "sourceRoot": "./src",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "strict": true,
+    "noUnusedLocals": true,
+    "inlineSourceMap": true,
+    "skipLibCheck": true,
+    "declaration": true
+  },
+  "include": ["./src/*.ts", "./src/**/*.ts"]
+}

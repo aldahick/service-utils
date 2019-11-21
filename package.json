@@ -1,0 +1,22 @@
+{
+  "name": "@aldahick/service-utils",
+  "version": "0.1.0",
+  "description": "",
+  "author": "Alex Hicks <alex@alexhicks.net> (https://alexhicks.net)",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aldahick/service-utils"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@aldahick/eslint-rules": "0.1.0",
+    "@types/express": "4.17.2",
+    "@types/jsonwebtoken": "8.3.5",
+    "@types/node": "12.12.11",
+    "@types/source-map-support": "0.5.0",
+    "typescript": "3.7.2"
+  }
+}
