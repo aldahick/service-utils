@@ -12,9 +12,12 @@ export abstract class Controller {
 
   static register(app: express.Application, controllerTypes: (typeof Controller)[], jwtKey: string) {
     for (const controllerType of controllerTypes) {
-      const { prototype: controller } = controllerType;
-      const matcher: express.IRouterMatcher<any> = app[controller.method].bind(app);
+      const controller: Controller = new (controllerType as any)();
       console.log(`${controller.method.toUpperCase()} /v${controller.version}${controller.route}`);
+      if (!app[controller.method]) {
+        throw new Error(`Invalid controller method specified: ${controller.method} (${controller.route}, ${controllerType.name})`);
+      }
+      const matcher: express.IRouterMatcher<any> = app[controller.method].bind(app);
       matcher(`/v${controller.version}${controller.route}`, this.buildRequestHandler(controllerType, jwtKey));
     }
   }
