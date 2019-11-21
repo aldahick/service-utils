@@ -1,3 +1,4 @@
+export * from "./Config";
 export * from "./Controller";
 export * from "./HttpError";
 export * from "./HttpMethod";

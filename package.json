@@ -20,7 +20,9 @@
     "src",
     "*.*"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "dotenv": "8.2.0"
+  },
   "devDependencies": {
     "@aldahick/eslint-rules": "0.1.0",
     "@types/express": "4.17.2",
