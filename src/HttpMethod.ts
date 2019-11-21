@@ -1,1 +1,7 @@
-export type HttpMethod = "get" | "delete" | "post" | "put" | "patch";
+export enum HttpMethod {
+  Get = "get",
+  Delete = "delete",
+  Post = "post",
+  Put = "put",
+  Patch = "patch"
+}
