@@ -10,7 +10,7 @@ export abstract class Controller {
   abstract method: HttpMethod;
   abstract handle(req: express.Request<any>, res: express.Response, payload: TokenPayload<any> | undefined): Promise<any>;
 
-  static register(app: express.Application, controllerTypes: (typeof Controller)[], jwtKey: string) {
+  static register(app: express.Application, controllerTypes: (typeof Controller)[], jwtKey?: string) {
     for (const controllerType of controllerTypes) {
       const controller: Controller = new (controllerType as any)();
       console.log(`${controller.method.toUpperCase()} /v${controller.version}${controller.route}`);
@@ -22,10 +22,10 @@ export abstract class Controller {
     }
   }
 
-  private static buildRequestHandler(controllerType: typeof Controller, jwtKey: string): express.RequestHandler {
+  private static buildRequestHandler(controllerType: typeof Controller, jwtKey?: string): express.RequestHandler {
     return async(req, res) => {
       let payload: TokenPayload | undefined;
-      if (req.headers.authorization) {
+      if (jwtKey && req.headers.authorization) {
         try {
           payload = jwt.verify(req.headers.authorization.split(" ")[1], jwtKey) as TokenPayload;
         } catch (err) {
