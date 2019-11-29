@@ -20,28 +20,22 @@ export abstract class Controller {
       const matcher: express.IRouterMatcher<any> = app[controller.method].bind(app);
       matcher(`/v${controller.version}${controller.route}`, this.buildRequestHandler(controllerType, jwtKey));
     }
+    if (jwtKey) {
+      app.get("/v1/payload", (req, res) => {
+        res.status(200).json({
+          payload: this.getPayload(req, jwtKey)
+        });
+      });
+    }
   }
 
   private static buildRequestHandler(controllerType: typeof Controller, jwtKey?: string): express.RequestHandler {
     return async(req, res) => {
-      let payload: TokenPayload | undefined;
-      if (jwtKey && req.headers.authorization) {
-        try {
-          payload = jwt.verify(req.headers.authorization.split(" ")[1], jwtKey) as TokenPayload;
-        } catch (err) {
-          // Swallow verification errors, we don't care about them
-        }
-        if (payload) {
-          payload.expiresAt = new Date(payload?.expiresAt);
-          if (payload.expiresAt.getTime() < Date.now()) {
-            payload = undefined;
-          }
-        }
-      }
+      const payload = jwtKey && this.getPayload(req, jwtKey);
       let result: any;
       try {
-        const controller = new (controllerType as any)();
-        result = await controller.handle(req, res, payload);
+        const controller: Controller = new (controllerType as any)();
+        result = await controller.handle(req, res, payload || undefined);
       } catch (err) {
         if (err instanceof HttpError) {
           res.status(err.status);
@@ -55,5 +49,25 @@ export abstract class Controller {
         res.send(result);
       }
     };
+  }
+
+  private static getPayload(req: express.Request, jwtKey: string): TokenPayload | undefined {
+    if (!req.headers.authorization) {
+      return;
+    }
+    let payload: TokenPayload | undefined;
+    try {
+      payload = jwt.verify(req.headers.authorization.split(" ")[1], jwtKey) as TokenPayload;
+    } catch (err) {
+      // Swallow verification errors, we don't care about them
+    }
+    if (!payload) {
+      return;
+    }
+    payload.expiresAt = new Date(payload?.expiresAt);
+    if (payload.expiresAt.getTime() < Date.now()) {
+      return undefined;
+    }
+    return payload;
   }
 }

@@ -1,7 +1,4 @@
-export interface TokenPayload<Extra = any> {
-  username: string;
-  userId: number;
-  sessionId: string;
+export interface TokenPayload<Data = any> {
   expiresAt: Date;
-  extra: Extra;
-}
+  data: Data;
+};
