@@ -1,5 +1,3 @@
-/* eslint-disable max-classes-per-file */
-
 export class HttpError extends Error {
   constructor(
     public status: number,
@@ -7,8 +5,6 @@ export class HttpError extends Error {
   ) { super(typeof(error) === "string" ? error : undefined); }
 }
 
-export class UnauthorizedError extends HttpError {
-  constructor(message?: string) {
-    super(403, message || "Unauthorized");
-  }
-}
+export const UnauthorizedError = (message = "Unauthorized") => new HttpError(403, message);
+export const NotFoundError = (message = "Not found") => new HttpError(404, message);
+export const InternalServerError = (message = "Internal server error") => new HttpError(500, message);
