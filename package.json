@@ -9,7 +9,8 @@
   "scripts": {
     "prepublishOnly": "npm run build",
     "build": "tsc -p .",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "bump": "git add . && git commit && npm version patch && npm publish && git push"
   },
   "repository": {
     "type": "git",
