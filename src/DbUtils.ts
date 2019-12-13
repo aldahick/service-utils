@@ -17,7 +17,7 @@ export class DbUtils {
     };
   }
 
-  static async initCollections(modelsClass: any, connection: mongoose.Connection) {
+  static initCollections(modelsClass: any, connection: mongoose.Connection) {
     typegoose.setGlobalOptions({
       globalOptions: {
         useNewEnum: true
