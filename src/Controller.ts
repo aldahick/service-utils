@@ -10,15 +10,19 @@ export abstract class Controller {
   abstract method: HttpMethod;
   abstract handle(req: express.Request<any>, res: express.Response, payload: TokenPayload<any> | undefined): Promise<any>;
 
-  static register(app: express.Application, controllerTypes: (typeof Controller)[], jwtKey?: string) {
-    for (const controllerType of controllerTypes) {
-      const controller: Controller = new (controllerType as any)();
+  static register(app: express.Application, controllerTypes: (Controller | typeof Controller)[], jwtKey?: string) {
+    const controllers = controllerTypes.map(controller =>
+      "handle" in controller
+        ? controller
+        : new (controller as any)() as Controller
+    );
+    for (const controller of controllers) {
       console.log(`${controller.method.toUpperCase()} /v${controller.version}${controller.route}`);
       if (!app[controller.method]) {
-        throw new Error(`Invalid controller method specified: ${controller.method} (${controller.route}, ${controllerType.name})`);
+        throw new Error(`Invalid controller method specified: ${controller.method} (${controller.route}, ${controller.constructor.name})`);
       }
       const matcher: express.IRouterMatcher<any> = app[controller.method].bind(app);
-      matcher(`/v${controller.version}${controller.route}`, this.buildRequestHandler(controllerType, jwtKey));
+      matcher(`/v${controller.version}${controller.route}`, this.buildRequestHandler(controller, jwtKey));
     }
     if (jwtKey) {
       app.get("/v1/payload", (req, res) => {
@@ -29,12 +33,11 @@ export abstract class Controller {
     }
   }
 
-  private static buildRequestHandler(controllerType: typeof Controller, jwtKey?: string): express.RequestHandler {
+  private static buildRequestHandler(controller: Controller, jwtKey?: string): express.RequestHandler {
     return async(req, res) => {
       const payload = jwtKey && this.getPayload(req, jwtKey);
       let result: any;
       try {
-        const controller: Controller = new (controllerType as any)();
         result = await controller.handle(req, res, payload || undefined);
       } catch (err) {
         if (err instanceof HttpError) {
