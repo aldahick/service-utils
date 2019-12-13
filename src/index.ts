@@ -1,5 +1,6 @@
 export * from "./Config";
 export * from "./Controller";
+export * from "./DbUtils";
 export * from "./HttpError";
 export * from "./HttpMethod";
 export * from "./TokenPayload";
